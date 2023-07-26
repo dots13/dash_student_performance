@@ -15,15 +15,34 @@ import plotly.figure_factory as ff
 
 jupyter_dash.default_mode="external"
 
-app = Dash(prevent_initial_callbacks="initial_duplicate", title="test_app")
+# external JavaScript files
+external_scripts = [
+    'https://www.google-analytics.com/analytics.js',
+    {'src': 'https://cdn.polyfill.io/v2/polyfill.min.js'},
+    {
+        'src': 'https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.10/lodash.core.js',
+        'integrity': 'sha256-Qqd/EfdABZUcAxjOkMi8eGEivtdTkh3b65xCZL4qAQA=',
+        'crossorigin': 'anonymous'
+    }
+]
+
+# external CSS stylesheets
+external_stylesheets = [
+    'https://codepen.io/chriddyp/pen/bWLwgP.css',
+    {
+        'href': 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css',
+        'rel': 'stylesheet',
+        'integrity': 'sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO',
+        'crossorigin': 'anonymous'
+    }
+]
+
+app = Dash(prevent_initial_callbacks="initial_duplicate", external_scripts=external_scripts,
+            external_stylesheets=external_stylesheets, title="test_app")
 server = app.server
 
 script_dir = os.path.dirname(__file__) # the cwd relative path of the script file
-css_path = "assert/typography.css" # the target file
-rel_to_css_path = os.path.join(script_dir, css_path) # the cwd-relative path of the target file
-app.css.append_css({"external_url": [rel_to_css_path]})
-
-rel_path = "data/result.csv" # the target file
+rel_path = "data\\result.csv" # the target file
 rel_to_cwd_path = os.path.join(script_dir, rel_path) # the cwd-relative path of the target file
 
 df = pd.read_csv(rel_to_cwd_path)
