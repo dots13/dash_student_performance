@@ -28,6 +28,7 @@ external_scripts = [
 
 # external CSS stylesheets
 external_stylesheets = [
+
     'https://codepen.io/chriddyp/pen/bWLwgP.css',
     {
         'href': 'https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css',
@@ -92,8 +93,8 @@ colors = {
     'text': '#7FDBFF'
 }
 
-app.layout = html.Div(style={'backgroundColor': colors['background']}, children=[
-    html.H1("Student performance dashboard HARE2"),
+app.layout = html.Div(style={'backgroundColor': colors['background'],  'padding': '25px 25px 75px 25px'}, children=[
+    html.H1("Student performance dashboard", style={'text-align': 'center', 'color': '#4C78A8'}),
     # Target section
     html.Div([
         html.Div([
@@ -105,8 +106,8 @@ app.layout = html.Div(style={'backgroundColor': colors['background']}, children=
                 options=target_list,
                 value='Final_G',
                 id='dropdown_target',
-                style={'width':'150px',
-                       'display':'inline-block',
+                style={'width': '150px',
+                       'display': 'inline-block',
                        'vertical-align': 'middle',
                        },
                 clearable=False,
@@ -424,25 +425,12 @@ def generate_chart(chart_type, target, cat_feature, sep_feature):
 # In[14]:
 
 
-def create_hist(df, feature, target):
+def create_hist(df, feature, target, fig):
     fig = go.Figure()
     name_list = df[feature].unique()
-    for name_f,color in zip(name_list, color_palette):
+    for name_f, color in zip(name_list, color_palette):
         fig.add_trace(go.Histogram(x=df[df[feature]==name_f][target], marker_color=color))
     fig.update_layout(barmode='overlay')
-    fig.update_traces(opacity=0.4)
-    return fig
-
-
-def create_displot(df, feature, sep_feature, fig):
-    fig = go.Figure()
-    name_list = df[sep_feature].unique()
-    hist_data = []
-    group_labels = []
-    for name_f in sorted(name_list):
-        hist_data.append(df[df[sep_feature] == name_f][feature])
-        group_labels.append(str(name_f))
-    fig = ff.create_distplot(hist_data, group_labels, bin_size=.4, show_rug=False, colors=color_palette)
     fig.update_traces(opacity=0.4)
     return fig
 
@@ -463,42 +451,52 @@ def generate_chart(feature):
     return fig
 
 
+def create_displot(df, feature, sep_feature, fig):
+    name_list = df[sep_feature].unique()
+    len_name_list = len(name_list)
+    hist_data = []
+    group_labels = []
+    for name_f in sorted(name_list):
+        hist_data.append(df[df[sep_feature] == name_f][feature])
+        group_labels.append(str(name_f))
+    fig_dis = ff.create_distplot(hist_data, group_labels, bin_size=.4, show_rug=False, colors=color_palette)
+    for i in range(len_name_list):
+        fig.add_trace(go.Histogram(fig_dis['data'][i],
+                                   marker_color=color_palette[i]
+                                   )
+                      )
+        fig.add_trace(go.Scatter(fig_dis['data'][i+len_name_list],
+                                 line=dict(color=color_palette[i], width=2)
+                                 )
+                      )
+    return fig
+
+
 @app.callback(
     Output(component_id='chart4', component_property='figure', allow_duplicate=True),
     Input(component_id='dropdown_con', component_property='value'),
     Input(component_id='dropdown_con_add', component_property='value'))
 def generate_chart(feature, sep_feature):
-
+    fig = go.Figure()
     if sep_feature == 'None':
-        fig = go.Figure()
-        fig = ff.create_distplot([df[feature]], [feature], bin_size=.4, show_rug=False, colors=color_palette)
-        fig.update_traces(opacity=0.4)
-        fig.update_layout(
-            autosize=True,
-            # width=400,
-            height=300,
-            margin=dict(l=20, r=20, t=20, b=20),
-            paper_bgcolor="LightSteelBlue",
-        )
-        return fig
+        fig_dis = ff.create_distplot([df[feature]], [feature], bin_size=.4, show_rug=False, colors=color_palette)
+        fig.add_trace(go.Histogram(fig_dis['data'][0],
+                                   marker_color=color_palette[0]
+                                   ))
+        fig.add_trace(go.Scatter(fig_dis['data'][1],
+                                 line=dict(color=color_palette[0], width=1)
+                                 ))
     else:
-        fig = go.Figure()
-        name_list = df[sep_feature].unique()
-        hist_data = []
-        group_labels = []
-        for name_f in sorted(name_list):
-            hist_data.append(df[df[sep_feature] == name_f][feature])
-            group_labels.append(str(name_f))
-        fig = ff.create_distplot(hist_data, group_labels, bin_size=.4, show_rug=False, colors=color_palette)
-        fig.update_traces(opacity=0.4)
-        fig.update_layout(
-            autosize=True,
-            # width=400,
-            height=300,
-            margin=dict(l=20, r=20, t=20, b=20),
-            paper_bgcolor="LightSteelBlue",
-        )
-        return fig
+        fig = create_displot(df, feature, sep_feature, fig)
+    fig.update_traces(opacity=0.4)
+    fig.update_layout(
+        autosize=True,
+        # width=400,
+        height=300,
+        margin=dict(l=20, r=20, t=20, b=20),
+        paper_bgcolor="LightSteelBlue",
+    )
+    return fig
 
 
 
