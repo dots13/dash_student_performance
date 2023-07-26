@@ -477,7 +477,18 @@ def create_displot(df, feature, sep_feature, fig):
     Input(component_id='dropdown_con_add', component_property='value'))
 def generate_chart(feature, sep_feature):
     fig = go.Figure()
-    fig.add_trace(go.Histogram(x=df[feature], marker_color=color_palette[0]))
+    if sep_feature == 'None':
+        fig_dis = ff.create_distplot([df[feature]], [feature], bin_size=.4, show_rug=False, colors=color_palette)
+        fig.add_trace(go.Histogram(fig_dis['data'][0],
+                                   marker_color=color_palette[0]
+                                   ))
+        print(fig_dis)
+        fig.add_trace(go.Scatter(fig_dis['data'][1],
+                                 line=dict(color=color_palette[0], width=2)
+                                 )
+                      )
+    else:
+        fig = create_displot(df, feature, sep_feature, fig)
     fig.update_traces(opacity=0.4)
     fig.update_layout(
         autosize=True,
