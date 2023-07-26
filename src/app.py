@@ -459,19 +459,6 @@ def generate_chart(feature, sep_feature):
     fig = go.Figure()
     if sep_feature == 'None':
         fig.add_trace(go.Histogram(x=df[feature], marker_color=color_palette[0], histnorm='probability'))
-        list_f = sns.distplot(df[feature]).get_lines()[0].get_data()
-        print(list_f)
-        fig_dis = ff.create_distplot([df[feature]], [feature])
-
-        normal_x = list_f[0]
-        normal_y = list_f[1]
-
-        fig.add_trace(go.Scatter(x=normal_x, y=normal_y, mode='lines',
-                                 line=dict(color='rgba(0,255,0, 1)',
-                                            # dash = 'dash'
-                                            width=1),
-                                 name='normal'
-                                 ))
     else:
         fig = create_hist(feature, sep_feature, fig)
 
