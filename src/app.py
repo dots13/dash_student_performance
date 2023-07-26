@@ -457,10 +457,10 @@ def generate_chart(feature):
     Input(component_id='dropdown_con_add', component_property='value'))
 def generate_chart(feature, sep_feature):
     fig = go.Figure()
-    if sep_feature == 'None':
-        fig.add_trace(go.Histogram(x=df[feature], marker_color=color_palette[0], histnorm='probability'))
-    else:
+    if sep_feature != 'None':
         fig = create_hist(feature, sep_feature, fig)
+    else:
+        fig.add_trace(go.Histogram(x=df[feature], marker_color=color_palette[0], histnorm='probability'))
 
     fig.update_traces(opacity=0.4)
     fig.update_layout(
