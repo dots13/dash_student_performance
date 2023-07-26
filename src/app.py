@@ -19,11 +19,11 @@ app = Dash(prevent_initial_callbacks="initial_duplicate", title="test_app")
 server = app.server
 
 script_dir = os.path.dirname(__file__) # the cwd relative path of the script file
-css_path = "assert\\typography.css" # the target file
+css_path = "assert/typography.css" # the target file
 rel_to_css_path = os.path.join(script_dir, css_path) # the cwd-relative path of the target file
 app.css.append_css({"external_url": [rel_to_css_path]})
 
-rel_path = "data\\result.csv" # the target file
+rel_path = "data/result.csv" # the target file
 rel_to_cwd_path = os.path.join(script_dir, rel_path) # the cwd-relative path of the target file
 
 df = pd.read_csv(rel_to_cwd_path)
