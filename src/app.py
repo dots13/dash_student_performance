@@ -463,12 +463,12 @@ def generate_chart(feature, sep_feature):
         normal_x = fig_dis.data[1]['x']
         normal_y = fig_dis.data[1]['y']
 
-        fig.add_traces(go.Scatter(x=normal_x, y=normal_y, mode='lines',
-                                  line=dict(color='rgba(0,255,0, 1)',
+        fig.add_trace(go.Scatter(x=df.Final_G, y=df.Final_G, mode='lines',
+                                 line=dict(color='rgba(0,255,0, 1)',
                                             # dash = 'dash'
                                             width=1),
-                                  name='normal'
-                                  ))
+                                 name='normal'
+                                 ))
     else:
         fig = create_hist(feature, sep_feature, fig)
 
