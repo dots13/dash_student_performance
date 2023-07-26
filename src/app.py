@@ -7,7 +7,7 @@
 from dash import Dash, dcc, html, Input, Output
 from dash import jupyter_dash
 import dash_bootstrap_components as dbc
-
+import os
 import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
@@ -17,11 +17,16 @@ jupyter_dash.default_mode="external"
 
 app = Dash(prevent_initial_callbacks="initial_duplicate", title="test_app")
 server = app.server
-app.config.supress_callback_exceptions = True
-app.css.append_css({"external_url": ["assert/typography.css"]})
 
+script_dir = os.path.dirname(__file__) # the cwd relative path of the script file
+css_path = "assert\\typography.css" # the target file
+rel_to_css_path = os.path.join(script_dir, css_path) # the cwd-relative path of the target file
+app.css.append_css({"external_url": [rel_to_css_path]})
 
-df = pd.read_csv('data/result.csv')
+rel_path = "data\\result.csv" # the target file
+rel_to_cwd_path = os.path.join(script_dir, rel_path) # the cwd-relative path of the target file
+
+df = pd.read_csv(rel_to_cwd_path)
 
 
 target_list = ['Final_G']
