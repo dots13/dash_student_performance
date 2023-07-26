@@ -12,6 +12,7 @@ import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
 import plotly.figure_factory as ff
+import seaborn as sns
 
 jupyter_dash.default_mode="external"
 
@@ -458,12 +459,14 @@ def generate_chart(feature, sep_feature):
     fig = go.Figure()
     if sep_feature == 'None':
         fig.add_trace(go.Histogram(x=df[feature], marker_color=color_palette[0], histnorm='probability'))
+        list_f = sns.distplot(df[feature]).get_lines()[0].get_data()
+        print(list_f)
         fig_dis = ff.create_distplot([df[feature]], [feature])
 
-        normal_x = fig_dis.data[1]['x']
-        normal_y = fig_dis.data[1]['y']
+        normal_x = list_f[0]
+        normal_y = list_f[1]
 
-        fig.add_trace(go.Scatter(x=df.Final_G, y=df.Final_G, mode='lines',
+        fig.add_trace(go.Scatter(x=normal_x, y=normal_y, mode='lines',
                                  line=dict(color='rgba(0,255,0, 1)',
                                             # dash = 'dash'
                                             width=1),
