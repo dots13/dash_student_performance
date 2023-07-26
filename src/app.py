@@ -42,7 +42,7 @@ app = Dash(prevent_initial_callbacks="initial_duplicate", external_scripts=exter
 server = app.server
 
 script_dir = os.path.dirname(__file__) # the cwd relative path of the script file
-rel_path = "data\\result.csv" # the target file
+rel_path = "data/result.csv" # the target file
 rel_to_cwd_path = os.path.join(script_dir, rel_path) # the cwd-relative path of the target file
 
 df = pd.read_csv(rel_to_cwd_path)
