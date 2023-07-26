@@ -37,14 +37,19 @@ external_stylesheets = [
     }
 ]
 
-app = Dash(prevent_initial_callbacks="initial_duplicate", external_scripts=external_scripts,
-            external_stylesheets=external_stylesheets, title="test_app")
+app = Dash(prevent_initial_callbacks="initial_duplicate",
+           external_scripts=external_scripts,
+           external_stylesheets=external_stylesheets,
+           title="test_app")
+            
 server = app.server
 
-script_dir = os.path.dirname(__file__) # the cwd relative path of the script file
-rel_path = "data/result.csv" # the target file
-rel_to_cwd_path = os.path.join(script_dir, rel_path) # the cwd-relative path of the target file
+# Path
+script_dir = os.path.dirname(__file__)  # the cwd relative path of the script file
+rel_path = "data/result.csv"  # the target file
+rel_to_cwd_path = os.path.join(script_dir, rel_path)  # the cwd-relative path of the target file
 
+# Read csv file
 df = pd.read_csv(rel_to_cwd_path)
 
 
@@ -79,70 +84,63 @@ cat_features = ['school',
                 'Dalc', 
                 'Walc', 
                 'health', 
-                'Subject', 
-               ]
-
-
-# In[4]:
-
+                'Subject',
+                ]
 
 colors = {
     'background': 'rgba(66,154,234, 0.1)',
     'text': '#7FDBFF'
 }
 
-
-# In[5]:
-
-
 app.layout = html.Div(style={'backgroundColor': colors['background']}, children=[
-    html.H1("Student performance dashboard"),
-    ### Target section
+    html.H1("Student performance dashboard HARE"),
+    # Target section
     html.Div([
         html.Div([
-        html.H5('Select target column  ',style={'display':'inline-block',
-                                              'margin-right':5, 
-                                              'vertical-align': 'middle'}),
-        dcc.Dropdown(
-            options=target_list,
-            value='Final_G',
-            id='dropdown_target',
-            style={'width':'150px',
-                   'display':'inline-block', 
-                   'vertical-align': 'middle',
-                  },
-            clearable=False,
-            )],
+            html.H5('Select target column  ', style={'display': 'inline-block',
+                                                     'margin-right': 5,
+                                                     'vertical-align': 'middle'}
+                    ),
+            dcc.Dropdown(
+                options=target_list,
+                value='Final_G',
+                id='dropdown_target',
+                style={'width':'150px',
+                       'display':'inline-block',
+                       'vertical-align': 'middle',
+                       },
+                clearable=False,
+                )],
             className="four columns",
             style={'margin-left': '10px'},),
         ],
-        className="row" ,
-       
+        className="row",
     ),
     
-    ###  Categorical feature
+    #  Categorical feature
     html.Div([
         html.Div([
             html.H3('Univariate analysis'),
             html.H6('Select categorical column  ',
-                    style={'display':'inline-block',
-                           'margin-right':5, 
+                    style={'display': 'inline-block',
+                           'margin-right': 5,
                            'vertical-align': 'middle'}),
             dcc.Dropdown(
                 options=cat_features,
                 value='Fjob',
                 id='dropdown_cat',
-                style={'width':'150px',
-                       'display':'inline-block',                    
+                style={'width': '150px',
+                       'display': 'inline-block',
                        'vertical-align': 'middle',
-                  },
-            clearable=False,
+                       },
+                clearable=False,
             ),            
-        ], 
+        ],
             className="four columns columns",
             style={'margin-left': '10px'},
         ),
-    ### Categorical Bivariate analysis
+
+    # Categorical Bivariate analysis
         html.Div([
             html.H3('Bivariate analysis'),
             dcc.RadioItems(
@@ -156,16 +154,16 @@ app.layout = html.Div(style={'backgroundColor': colors['background']}, children=
                 inline=True
             ),
             html.H6('Add separation ',
-                    style={'display':'inline-block',
-                           'margin-left':25, 
-                           'margin-right':5, 
+                    style={'display': 'inline-block',
+                           'margin-left': 25,
+                           'margin-right': 5,
                            'vertical-align': 'middle'}),
             dcc.Dropdown(
                 options=['None'] + cat_features,
                 value='None',
                 id='dropdown_cat_add',
-                style={'width':'150px',
-                       'display':'inline-block', 
+                style={'width': '150px',
+                       'display': 'inline-block',
                        'vertical-align': 'middle',},
                 clearable=False,
                 ),
@@ -182,55 +180,62 @@ app.layout = html.Div(style={'backgroundColor': colors['background']}, children=
                 dcc.Graph(id='chart1'),
             ],
             className="eight columns columns",
-            style={'display':'inline-block'},
+            style={'display': 'inline-block'},
             ),
             html.Div([
-                html.Div(id='cat_stats', style={'display':'inline-block','whiteSpace': 'pre-line', 'vertical': ':middle', 'font-size': '1.2rem', 'line-height': '90%', 'font-family': "Lucida Console"}),
+                html.Div(id='cat_stats', style={'display': 'inline-block',
+                                                'whiteSpace': 'pre-line',
+                                                'vertical': ':middle',
+                                                'font-size': '1.2rem',
+                                                'line-height': '90%',
+                                                'font-family': "Lucida Console"
+                                                }
+                         ),
             ],
             className="four columns columns",
-            style={'display':'inline-block'},
+            style={'display': 'inline-block'},
             ),
         ],
         className="four columns columns",
-        style={'display':'inline-block', 'margin-left': '10px'},
+        style={'display': 'inline-block', 'margin-left': '10px'},
         ),
         
         html.Div([
             dcc.Graph(id='chart2'),
         ],
-        className="eight columns",
-        style={'display':'inline-block', 'margin-left': '-10px'},),
+            className="eight columns",
+            style={'display': 'inline-block', 'margin-left': '-10px'},),
     ],
-    className="row"),
+        className="row"),
     
-    ### Continuous feature
-    
+    # Continuous feature
+
     html.Div([
         html.Div([
             html.H6('Select continuous column  ',
-                    style={'display':'inline-block',
-                           'margin-right':5, 
+                    style={'display': 'inline-block',
+                           'margin-right': 5,
                            'vertical-align': 'middle'}),
             dcc.Dropdown(
                 options=con_features,
                 value='Final_G',
                 id='dropdown_con',
-                style={'width':'150px',
-                       'display':'inline-block',                    
+                style={'width': '150px',
+                       'display': 'inline-block',
                        'vertical-align': 'middle',
-                  },
-            clearable=False,
+                       },
+                clearable=False,
             ),            
         ], 
             className="four columns columns",
             style={'margin-left': '10px'},
         ),
-    ### Continuous Bivariate analysis
+    # Continuous Bivariate analysis
         html.Div([
             html.H6('Add separation ',
-                    style={'display':'inline-block',
-                           'margin-left':25, 
-                           'margin-right':5, 
+                    style={'display': 'inline-block',
+                           'margin-left': 25,
+                           'margin-right': 5,
                            'vertical-align': 'middle'}),
             dcc.Dropdown(
                 options=['None'] + cat_features,
@@ -244,45 +249,48 @@ app.layout = html.Div(style={'backgroundColor': colors['background']}, children=
         ], 
             className="eight columns",
             style={'margin-left': '-10px'},),
-    ], 
-    className="row"),
+    ],
+        className="row"),
     
-    ### Charts section
+    # Charts section
     html.Div([
         html.Div([
             html.Div([
                 dcc.Graph(id='chart3'),
             ],
             className="eight columns columns",
-            style={'display':'inline-block'},
+            style={'display': 'inline-block'},
             ),
             html.Div([
-                html.Div(id='con_stats', style={'display':'inline-block','whiteSpace': 'pre-line', 'vertical': ':middle', 'font-size': '1.2rem', 'line-height': '90%', 'font-family': "Lucida Console"}),
+                html.Div(id='con_stats', style={'display': 'inline-block',
+                                                'whiteSpace': 'pre-line',
+                                                'vertical': ':middle',
+                                                'font-size': '1.2rem',
+                                                'line-height': '90%',
+                                                'font-family': "Lucida Console"}
+                         ),
             ],
-            className="four columns columns",
-            style={'display':'inline-block'},
+                className="four columns columns",
+                style={'display': 'inline-block'},
             ),
         ],
-        className="four columns columns",
-        style={'display':'inline-block', 'margin-left': '10px'},
+            className="four columns columns",
+            style={'display': 'inline-block', 'margin-left': '10px'},
         ),
         
         html.Div([
             dcc.Graph(id='chart4'),
         ],
-        className="eight columns",
-        style={'display':'inline-block', 'margin-left': '-10px'},),
+            className="eight columns",
+            style={'display': 'inline-block', 'margin-left': '-10px'},),
     ],
-    className="row"),
+        className="row"),
 ])
-
-
-# In[6]:
 
 
 def create_box(df, feature, feature_sep, target, fig):
     #fig = go.Figure()
-    if feature_sep=='None':
+    if feature_sep == 'None':
         fig.add_trace(go.Box(x=df[feature], y=df.Final_G, marker_color='#4C78A8', boxmean='sd'))
     else:
         name_list = list(df[feature_sep].unique())
@@ -300,10 +308,6 @@ def create_box(df, feature, feature_sep, target, fig):
                                    ))
         fig.update_layout(boxmode='group')
     return fig
-    
-
-
-# In[7]:
 
 
 def create_violin(df, feature, feature_sep, target, fig):
@@ -323,19 +327,15 @@ def create_violin(df, feature, feature_sep, target, fig):
     return fig
 
 
-# In[8]:
-
-
-color_palette = ['#4C78A8', '#E45756','#54A24B', '#72B7B2', '#F6912F', '#64a6bd', '#fd8595', '#85d48b', '#f45f34', '#ffcc33']
+color_palette = ['#4C78A8', '#E45756', '#54A24B', '#72B7B2', '#F6912F',
+                 '#64a6bd', '#fd8595', '#85d48b', '#f45f34', '#ffcc33'
+                 ]
 orientation_list = ['positive', 'negative', 'positive', 'negative', 'positive']
-
-
-# In[9]:
 
 
 def my_chart_bivar(chart_type, target, cat_feature, sep_feature):
     fig = go.Figure()
-    if sep_feature!='None':
+    if sep_feature != 'None':
         if chart_type == 'box':
             fig = create_box(df, cat_feature, sep_feature, target, fig)
         elif chart_type == 'violin':
@@ -357,16 +357,13 @@ def my_chart_bivar(chart_type, target, cat_feature, sep_feature):
     return fig
 
 
-# In[10]:
-
-
 @app.callback(
     Output(component_id='chart1', component_property='figure', allow_duplicate=True),
     Input(component_id='dropdown_cat', component_property='value'),
 )
 def generate_bar_chart(feature):
     val_counts = df[feature].value_counts()
-    hovertext=[]
+    hovertext = []
     for i in (df[feature].value_counts()/len(df)):
         hovertext.append(f'{i*100:.1f}%')
     fig = go.Figure()
@@ -385,22 +382,17 @@ def generate_bar_chart(feature):
     return fig
 
 
-# In[11]:
-
-
 @app.callback(
     Output(component_id='cat_stats', component_property='children', allow_duplicate=True),
     Input(component_id='dropdown_cat', component_property='value'),
     Input(component_id='dropdown_target', component_property='value')
 )
 
+
 def update_output(value, target):
     var_group = df.groupby(value)[target].var()
     stat_string = "Var for " + str(var_group).split('Name')[0]
     return stat_string
-
-
-# In[12]:
 
 
 @app.callback(
@@ -442,10 +434,8 @@ def create_hist(df, feature, target):
     return fig
 
 
-# In[15]:
-
-
 def create_displot(df, feature, sep_feature, fig):
+    fig = go.Figure()
     name_list = df[sep_feature].unique()
     hist_data = []
     group_labels = []
@@ -455,9 +445,6 @@ def create_displot(df, feature, sep_feature, fig):
     fig = ff.create_distplot(hist_data, group_labels, bin_size=.4, show_rug=False, colors=color_palette)
     fig.update_traces(opacity=0.4)
     return fig
-
-
-# In[16]:
 
 
 @app.callback(
@@ -476,19 +463,24 @@ def generate_chart(feature):
     return fig
 
 
-# In[17]:
-
-
 @app.callback(
     Output(component_id='chart4', component_property='figure', allow_duplicate=True),
     Input(component_id='dropdown_con', component_property='value'),
     Input(component_id='dropdown_con_add', component_property='value'))
 def generate_chart(feature, sep_feature):
     fig = go.Figure()
-    if sep_feature=='None':
+    if sep_feature == 'None':
         fig = ff.create_distplot([df[feature]], [feature], bin_size=.4, show_rug=False, colors=color_palette)
     else:
-        fig = create_displot(df, feature, sep_feature, fig)
+        name_list = df[sep_feature].unique()
+        hist_data = []
+        group_labels = []
+        for name_f in sorted(name_list):
+            hist_data.append(df[df[sep_feature] == name_f][feature])
+            group_labels.append(str(name_f))
+        fig = ff.create_distplot(hist_data, group_labels, bin_size=.4, show_rug=False, colors=color_palette)
+        
+    fig.update_traces(opacity=0.4)
     fig.update_layout(
         autosize=True,
         #width=400,
@@ -497,7 +489,6 @@ def generate_chart(feature, sep_feature):
         paper_bgcolor="LightSteelBlue",
     )
     return fig
-
 
 
 if __name__ == '__main__':
