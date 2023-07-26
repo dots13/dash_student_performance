@@ -93,7 +93,7 @@ colors = {
 }
 
 app.layout = html.Div(style={'backgroundColor': colors['background']}, children=[
-    html.H1("Student performance dashboard HARE"),
+    html.H1("Student performance dashboard HARE2"),
     # Target section
     html.Div([
         html.Div([
@@ -468,10 +468,21 @@ def generate_chart(feature):
     Input(component_id='dropdown_con', component_property='value'),
     Input(component_id='dropdown_con_add', component_property='value'))
 def generate_chart(feature, sep_feature):
-    fig = go.Figure()
+
     if sep_feature == 'None':
+        fig = go.Figure()
         fig = ff.create_distplot([df[feature]], [feature], bin_size=.4, show_rug=False, colors=color_palette)
+        fig.update_traces(opacity=0.4)
+        fig.update_layout(
+            autosize=True,
+            # width=400,
+            height=300,
+            margin=dict(l=20, r=20, t=20, b=20),
+            paper_bgcolor="LightSteelBlue",
+        )
+        return fig
     else:
+        fig = go.Figure()
         name_list = df[sep_feature].unique()
         hist_data = []
         group_labels = []
@@ -479,16 +490,16 @@ def generate_chart(feature, sep_feature):
             hist_data.append(df[df[sep_feature] == name_f][feature])
             group_labels.append(str(name_f))
         fig = ff.create_distplot(hist_data, group_labels, bin_size=.4, show_rug=False, colors=color_palette)
-        
-    fig.update_traces(opacity=0.4)
-    fig.update_layout(
-        autosize=True,
-        #width=400,
-        height=300,
-        margin=dict(l=20, r=20, t=20, b=20),
-        paper_bgcolor="LightSteelBlue",
-    )
-    return fig
+        fig.update_traces(opacity=0.4)
+        fig.update_layout(
+            autosize=True,
+            # width=400,
+            height=300,
+            margin=dict(l=20, r=20, t=20, b=20),
+            paper_bgcolor="LightSteelBlue",
+        )
+        return fig
+
 
 
 if __name__ == '__main__':
