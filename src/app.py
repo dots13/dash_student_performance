@@ -17,6 +17,8 @@ jupyter_dash.default_mode="external"
 
 app = Dash(prevent_initial_callbacks="initial_duplicate", title="test_app")
 server = app.server
+app.config.supress_callback_exceptions = True
+app.css.append_css({"external_url": ["assert/typography.css"]})
 
 
 df = pd.read_csv('data/result.csv')
