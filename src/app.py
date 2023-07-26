@@ -460,17 +460,6 @@ def generate_chart(feature, sep_feature):
         fig = create_hist(feature, sep_feature, fig)
     else:
         fig.add_trace(go.Histogram(x=df[feature], marker_color=color_palette[0], histnorm='probability'))
-        fig_dis = ff.create_distplot([df[feature]], [feature])
-
-        normal_x = fig_dis.data[1]['x']
-        normal_y = fig_dis.data[1]['y']
-
-        fig.add_trace(go.Scatter(x=normal_x, y=normal_y, mode='lines',
-                                 line=dict(color='rgba(0,255,0, 1)',
-                                            # dash = 'dash'
-                                            width=1),
-                                 name='normal'
-                                 ))
 
     fig.update_traces(opacity=0.4)
     fig.update_layout(
