@@ -424,11 +424,11 @@ def generate_chart(chart_type, target, cat_feature, sep_feature):
 # In[14]:
 
 
-def create_hist(df, feature, target, fig):
-    fig = go.Figure()
-    name_list = df[feature].unique()
+def create_hist(feature, sep_feature, fig):
+    name_list = df[sep_feature].unique()
     for name_f, color in zip(name_list, color_palette):
-        fig.add_trace(go.Histogram(x=df[df[feature]==name_f][target], marker_color=color))
+        fig.add_trace(go.Histogram(x=df[df[sep_feature] == name_f][feature], marker_color=color, histnorm='probability')
+                      )
     fig.update_layout(barmode='overlay')
     fig.update_traces(opacity=0.4)
     return fig
@@ -450,27 +450,6 @@ def generate_chart(feature):
     return fig
 
 
-def create_displot(df, feature, sep_feature, fig):
-    name_list = df[sep_feature].unique()
-    len_name_list = len(name_list)
-    hist_data = []
-    group_labels = []
-    for name_f in sorted(name_list):
-        hist_data.append(df[df[sep_feature] == name_f][feature])
-        group_labels.append(str(name_f))
-    fig_dis = ff.create_distplot(hist_data, group_labels, bin_size=.4, show_rug=False, colors=color_palette)
-    for i in range(len_name_list):
-        fig.add_trace(go.Histogram(fig_dis['data'][i],
-                                   marker_color=color_palette[i]
-                                   )
-                      )
-        fig.add_trace(go.Scatter(fig_dis['data'][i+len_name_list],
-                                 line=dict(color=color_palette[i], width=2)
-                                 )
-                      )
-    return fig
-
-
 @app.callback(
     Output(component_id='chart4', component_property='figure', allow_duplicate=True),
     Input(component_id='dropdown_con', component_property='value'),
@@ -478,17 +457,21 @@ def create_displot(df, feature, sep_feature, fig):
 def generate_chart(feature, sep_feature):
     fig = go.Figure()
     if sep_feature == 'None':
-        fig_dis = ff.create_distplot([df[feature]], [feature], bin_size=.4, show_rug=False, colors=color_palette)
-        fig.add_trace(go.Histogram(fig_dis['data'][0],
-                                   marker_color=color_palette[0]
-                                   ))
-        print(fig_dis)
-        fig.add_trace(go.Scatter(fig_dis['data'][1],
-                                 line=dict(color=color_palette[0], width=2)
-                                 )
-                      )
+        fig.add_trace(go.Histogram(x=df[feature], marker_color=color_palette[0], histnorm='probability'))
+        fig_dis = ff.create_distplot([df[feature]], [feature])
+
+        normal_x = fig_dis.data[1]['x']
+        normal_y = fig_dis.data[1]['y']
+
+        fig.add_traces(go.Scatter(x=normal_x, y=normal_y, mode='lines',
+                                  line=dict(color='rgba(0,255,0, 1)',
+                                            # dash = 'dash'
+                                            width=1),
+                                  name='normal'
+                                  ))
     else:
-        fig = create_displot(df, feature, sep_feature, fig)
+        fig = create_hist(feature, sep_feature, fig)
+
     fig.update_traces(opacity=0.4)
     fig.update_layout(
         autosize=True,
