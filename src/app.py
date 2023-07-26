@@ -480,12 +480,7 @@ def generate_chart(feature, sep_feature):
     fig = go.Figure()
     if sep_feature == 'None':
         fig_dis = ff.create_distplot([df[feature]], [feature], bin_size=.4, show_rug=False, colors=color_palette)
-        fig.add_trace(go.Histogram(fig_dis['data'][0],
-                                   marker_color=color_palette[0]
-                                   ))
-        fig.add_trace(go.Scatter(fig_dis['data'][1],
-                                 line=dict(color=color_palette[0], width=1)
-                                 ))
+        fig.add_trace(go.Histogram(x=df[feature], marker_color=color_palette[0]))
     else:
         fig = create_displot(df, feature, sep_feature, fig)
     fig.update_traces(opacity=0.4)
