@@ -53,6 +53,11 @@ rel_to_cwd_path = os.path.join(script_dir, rel_path)  # the cwd-relative path of
 # Read csv file
 df = pd.read_csv(rel_to_cwd_path)
 
+color_palette = ['#4C78A8', '#E45756', '#54A24B', '#72B7B2', '#F6912F',
+                 '#64a6bd', '#fd8595', '#85d48b', '#f45f34', '#ffcc33'
+                 ]
+orientation_list = ['positive', 'negative', 'positive', 'negative', 'positive']
+
 
 target_list = ['Final_G']
 con_features = ['absences', 'Final_G']
@@ -328,12 +333,6 @@ def create_violin(df, feature, feature_sep, target, fig):
     return fig
 
 
-color_palette = ['#4C78A8', '#E45756', '#54A24B', '#72B7B2', '#F6912F',
-                 '#64a6bd', '#fd8595', '#85d48b', '#f45f34', '#ffcc33'
-                 ]
-orientation_list = ['positive', 'negative', 'positive', 'negative', 'positive']
-
-
 def my_chart_bivar(chart_type, target, cat_feature, sep_feature):
     fig = go.Figure()
     if sep_feature != 'None':
@@ -478,11 +477,7 @@ def create_displot(df, feature, sep_feature, fig):
     Input(component_id='dropdown_con_add', component_property='value'))
 def generate_chart(feature, sep_feature):
     fig = go.Figure()
-    if sep_feature == 'None':
-        fig_dis = ff.create_distplot([df[feature]], [feature], bin_size=.4, show_rug=False, colors=color_palette)
-        fig.add_trace(go.Histogram(x=df[feature], marker_color=color_palette[0]))
-    else:
-        fig = create_displot(df, feature, sep_feature, fig)
+    fig.add_trace(go.Histogram(x=df[feature], marker_color=color_palette[0]))
     fig.update_traces(opacity=0.4)
     fig.update_layout(
         autosize=True,
